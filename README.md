@@ -221,6 +221,52 @@ def check_phone(phone):
         return True
 
 #check_phone("+254729225710")
+
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+def send_email(sender_email, sender_password, recipient_email, subject, body):
+    # Set up the SMTP server details
+    smtp_server = 'smtp.example.com'  # Replace with your SMTP server address
+    smtp_port = 587  # Replace with your SMTP server port (587 is a common TLS port)
+
+    # Create the email message
+    message = MIMEMultipart()
+    message['From'] = sender_email
+    message['To'] = recipient_email
+    message['Subject'] = subject
+
+    # Attach the body of the email
+    message.attach(MIMEText(body, 'plain'))
+
+    try:
+        # Connect to the SMTP server and initiate TLS encryption
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.starttls()
+
+        # Log in to the SMTP server using your credentials
+        server.login(sender_email, sender_password)
+
+        # Send the email
+        server.sendmail(sender_email, recipient_email, message.as_string())
+
+        print("Email sent successfully!")
+    except Exception as e:
+        print("Error sending email:", str(e))
+    finally:
+        # Close the connection to the SMTP server
+        server.quit()
+
+# Example usage
+sender_email = 'your_email@example.com'
+sender_password = 'your_email_password'
+recipient_email = 'recipient@example.com'
+subject = 'Test Email'
+body = 'This is a test email sent using Python!'
+
+# send_mail(sender_email, sender_password, recipient_email, subject, body)
+
 ```
 ## Install the Required Libraries for the helper functions
 ```
