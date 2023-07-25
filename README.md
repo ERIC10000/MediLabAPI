@@ -222,3 +222,20 @@ def check_phone(phone):
 
 #check_phone("+254729225710")
 ```
+## Install the Required Libraries for the helper functions
+```
+pip3 install africastalking
+```
+
+```
+pip3 install bcrypt
+```
+
+```
+pip3 install cryptography
+```
+
+```
+pip3 install requests
+```
+
