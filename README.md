@@ -285,3 +285,26 @@ pip3 install cryptography
 pip3 install requests
 ```
 
+## Add LabTests
+
+```
+class LabTests(Resource):
+    def post(self):
+        data = request.json
+        lab_id = data['lab_id']
+
+        connection = pymysql.connect(host='localhost', user='root', password='', database='medilab5')
+
+        sql = "select * from lab_tests where lab_id = %s"
+        cursor = connection.cursor(pymysql.cursors.DictCursor)
+        cursor.execute(sql, lab_id)
+
+        count = cursor.rowcount
+        if count == 0:
+            return jsonify({'message': 'No lab Found'})
+        else:
+            lab_tests = cursor.fetchall()
+            return jsonify(lab_tests)
+```
+
+
