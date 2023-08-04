@@ -307,4 +307,49 @@ class LabTests(Resource):
             return jsonify(lab_tests)
 ```
 
+## View Invoice Details and Changepassword
+
+```
+# Nurse Change Password
+class ChangePassword(Resource):
+    def put(self):
+        data = request.json
+        nurse_id = data['nurse_id']
+        current_password = data['current_password']
+        new_password = data['new_password']
+        confirm_password = data['confirm_password']
+
+        sql = "select * from nurses where nurse_id = %s"
+        connection = pymysql.connect(host='localhost',user='root', password='', database='medilab5')
+        cursor = connection.cursor(pymysql.cursors.DictCursor)
+
+        cursor.execute(sql, nurse_id)
+        count = cursor.rowcount
+        if count == 0:
+            return jsonify({'message': 'Nurse Does Not Exist'})
+        else:
+            nurse = cursor.fetchone()
+            hashed_password = nurse['password']
+
+            if hash_verify(current_password, hashed_password):
+                if new_password != confirm_password:
+                    return jsonify({'message': 'Password Do Not Match!!!'})
+                else:
+                    sql = "update nurses set password = %s where nurse_id = %s"
+                    cursor = connection.cursor()
+                    data = (hash_password(new_password), nurse_id)
+
+                    try:
+                        cursor.execute(sql, data)
+                        connection.commit()
+                        return jsonify({'message': 'Password Changed Successfully'})
+                    except:
+                        connection.rollback()
+                        return jsonify({'message': 'Error!! changing password'})
+            
+            else:
+                return jsonify({'message':'Current Password is Incorrect!!!!!'})
+
+```
+
 
