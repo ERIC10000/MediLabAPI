@@ -352,4 +352,31 @@ class ChangePassword(Resource):
 
 ```
 
+```
+# ViewInvoiceDetails
+class ViewInvoiceDetails(Resource):
+    def post(self):
+        data = request.json
+        
+        invoice_no = data['invoice_no']
+
+        sql = "select * from bookings where invoice_no = %s"
+        connection = pymysql.connect(host='localhost',user='root', password='', database='medilab5')
+        cursor = connection.cursor(pymysql.cursors.DictCursor)
+
+        cursor.execute(sql, invoice_no)
+
+        count = cursor.rowcount
+        if count == 0:
+            message = f"Invoice No {invoice_no} Does Not Exists"
+            return jsonify({'message': message})
+        else:
+
+            bookings = cursor.fetchall()
+            import json
+            jsonStr = json.dumps(bookings, indent=1, sort_keys=True, default=str)
+            # then covert json string to json object
+            return json.loads(jsonStr)
+```
+
 
